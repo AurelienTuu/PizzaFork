@@ -40,5 +40,5 @@ class Pager extends BaseConfig
      * Summary of perPage
      * @var int
      */
-    public $perPage = 10;
+    public $perPage = 6;
 }

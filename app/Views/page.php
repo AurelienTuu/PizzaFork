@@ -11,6 +11,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/ca399f254d.js" crossorigin="anonymous"></script>
+    <style>
+        /* Uniform image cropping using object-fit */
+        .card-img-top.fixed-thumb {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        /* smaller thumbnails in bag */
+        .bag-thumb {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        /* square preview (forms) */
+        .preview-thumb {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
     <?= $this->include('_errorsMessages.php') ?>

@@ -5,7 +5,7 @@
     <?php foreach ($pizzas as $pizza) : ?>
         <div class="col mb-4">
             <div class="card">
-                <img src="<?= '/img/'.$pizza->picture ?>" class="card-img-top" alt="...">
+                <img src="<?= '/img/'.$pizza->picture ?>" class="card-img-top fixed-thumb" alt="...">
                 <div class="card-body">
                     <h5 class="card-title"><?= $pizza->text ?></h5>
                     <a href="<?= '/bag/add/'.$pizza->id ?>" class="btn btn-primary"
@@ -17,7 +17,7 @@
         </div>
     <?php endforeach ?>
 </div>
-<div class="row">
+<div class="row">   
     <p>
         <a class="btn btn-primary" href="/bag/checkout">
             <i class="fas fa-check"></i> <i class="fas fa-shopping-cart"></i>

@@ -36,7 +36,7 @@
 
             <div class="form-group">
                 <img src="<?= old('picture', base_url('/img/' . ($ingredient->picture ?? '')), false) ?>"
-                     class="img-fluid thumbnail" width="200" height="200">
+                         class="img-fluid thumbnail preview-thumb">
             </div>
 
             <button class="btn btn-primary" type="submit">

@@ -8,8 +8,8 @@
             <?php foreach ($bag->contents() as $item) : ?>
                 <tr style="text-align: center;">
                     <td>
-                        <img src="<?= '/img/' . $item['picture'] ?>" width="60" height="40"
-                             class="img-fluid rounded" alt="...">
+                    <img src="<?= '/img/' . $item['picture'] ?>" 
+                        class="img-fluid rounded bag-thumb" alt="...">
                     </td>
                     <td><h5><?= $item['name'] ?></h5></td>
                     <td style="width: 5%;">

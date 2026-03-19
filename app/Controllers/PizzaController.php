@@ -34,12 +34,29 @@ class PizzaController extends BaseController {
 
     public function save(int $id = null) {
         $rules = $this->pizzaModel->getValidationRules();
+        $file = $this->request->getFile('picture');
+        $isNewUpload = $file && $file->getError() !== UPLOAD_ERR_NO_FILE;
+
+        if (is_null($id) || $isNewUpload) {
+            $rules['picture'] = [
+                'uploaded[picture]',
+                'mime_in[picture,image/jpg,image/jpeg,image/png]',
+                'max_size[picture,2048]',
+            ];
+        }
+
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         } else {
+            $img = $this->request->getFile('picture');
             $form_data = [
                 'text' => $this->request->getPost('text'),
             ];
+
+            if ($img && $img->isValid() && $img->getError() !== UPLOAD_ERR_NO_FILE) {
+                $img->move('img');
+                $form_data['picture'] = $img->getName();
+            }
             if (!is_null($id)) {
                 $form_data['id'] = $id;
             }
