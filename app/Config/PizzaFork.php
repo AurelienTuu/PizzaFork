@@ -6,5 +6,5 @@ use CodeIgniter\Config\BaseConfig;
 
 class PizzaFork extends BaseConfig
 {
-    public $idPateAPain = 1;
+    public $idPateAPizza = 1;
 }

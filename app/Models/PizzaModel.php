@@ -74,7 +74,7 @@ class PizzaModel extends Model
                 $response = true;
             }
 
-            $idIngredient = config('PizzaFork')->idPateAPain;
+            $idIngredient = config('PizzaFork')->idPateAPizza;
 
             $garnitureModel = new GarnitureModel();
             $dataGarniture = [

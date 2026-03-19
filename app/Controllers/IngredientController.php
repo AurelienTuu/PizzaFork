@@ -4,17 +4,21 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\IngredientModel;
+use App\Models\GarnitureModel;
 use App\Entities\Ingredient;
 
 class IngredientController extends BaseController
 {
     /** @var IngredientModel $ingredientModel */
     protected $ingredientModel;
+    /** @var GarnitureModel $garnitureModel */
+    protected $garnitureModel;
 
     public function __construct()
     {
         $this->helpers = ['form', 'url'];
         $this->ingredientModel = new IngredientModel();
+        $this->garnitureModel = new GarnitureModel();
     }
 
     public function index()
@@ -33,8 +37,15 @@ class IngredientController extends BaseController
 
     public function delete(int $id)
     {
+        $isUsed = $this->garnitureModel->where('idIngredient', $id)->first();
+
+        if ($isUsed) {
+            return redirect()->to('/ingredients')->with('error', 'Impossible de supprimer : cet ingrédient est utilisé dans une ou plusieurs pizzas.');
+        }
+
         $this->ingredientModel->where(['id' => $id])->delete();
-        return redirect()->to('/ingredients')->with('message', 'Ingredient supprimé');
+
+        return redirect()->to('/ingredients')->with('message', 'Ingrédient supprimé avec succès.');
     }
 
     public function save(int $id = null)
