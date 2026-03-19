@@ -5,7 +5,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'PizzaController::index');
+$routes->setDefaultController('HomeController');
+$routes->get('/', 'HomeController::index');
 
 $routes->get('/pizzas', 'PizzaController::index');
 $routes->get('/pizza/create', 'PizzaController::create');
@@ -27,5 +28,8 @@ $routes->get('/pizza/ingredient/delete/(:num)', 'GarnitureController::delete/$1'
 $routes->post('/pizza/ingredient/save', 'GarnitureController::save');
 $routes->get('/pizza/ingredient/edit/(:num)', 'GarnitureController::edit/$1');
 $routes->post('/pizza/ingredient/save/(:num)', 'GarnitureController::save/$1');
+//
+$routes->get('/bag/add/(:num)', 'BagController::add/$1');
+$routes->get('/bag/checkout', 'BagController::index');
 
 
