@@ -31,5 +31,6 @@ $routes->post('/pizza/ingredient/save/(:num)', 'GarnitureController::save/$1');
 //
 $routes->get('/bag/add/(:num)', 'BagController::add/$1');
 $routes->get('/bag/checkout', 'BagController::index');
-
+$routes->get('/bag/qty/Inc/(:any)', 'BagController::incQty/$1');
+$routes->get('/bag/qty/Dec/(:any)', 'BagController::decQty/$1');
 

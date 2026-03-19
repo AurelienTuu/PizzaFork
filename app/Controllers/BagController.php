@@ -30,4 +30,52 @@ class BagController extends BaseController {
 
         return redirect()->to('/');
     }
+
+        public function incQty(string $rowid = null) {
+            $bag = \Config\Services::cart();
+            if (empty($rowid)) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $items = $bag->contents();
+            // contents() stores items keyed by rowid
+            if (!isset($items[$rowid])) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $currentQty = (int) $items[$rowid]['qty'];
+            $bag->update([
+                'rowid' => $rowid,
+                'qty'   => $currentQty + 1,
+            ]);
+
+            return redirect()->to('/bag/checkout');
+        }
+
+        public function decQty(string $rowid = null) {
+            $bag = \Config\Services::cart();
+            if (empty($rowid)) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $items = $bag->contents();
+            if (!isset($items[$rowid])) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $currentQty = (int) $items[$rowid]['qty'];
+            $newQty = $currentQty - 1;
+
+            if ($newQty <= 0) {
+                // remove the item from the cart
+                $bag->remove($rowid);
+            } else {
+                $bag->update([
+                    'rowid' => $rowid,
+                    'qty'   => $newQty,
+                ]);
+            }
+
+            return redirect()->to('/bag/checkout');
+        }
 }

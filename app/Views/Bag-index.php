@@ -13,7 +13,7 @@
                     </td>
                     <td><h5><?= $item['name'] ?></h5></td>
                     <td style="width: 5%;">
-                        <a href="<?= '/bag/qty/Dec' ?>" class="btn btn-danger" role="button">
+                        <a href="<?= '/bag/qty/Dec/' . $item['rowid'] ?>" class="btn btn-danger" role="button">
                             <i class="fas fa-minus"></i>
                         </a>
                     </td>
@@ -21,7 +21,7 @@
                         <h5><?= $bag->formatNumber($item['qty']) ?></h5>
                     </td>
                     <td style="width: 5%;">
-                        <a href="<?= '/bag/qty/Inc' ?>" class="btn btn-success" role="button">
+                        <a href="<?= '/bag/qty/Inc/' . $item['rowid'] ?>" class="btn btn-success" role="button">
                             <i class="fas fa-plus"></i>
                         </a>
                     </td>
