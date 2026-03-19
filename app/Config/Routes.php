@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->setDefaultController('HomeController');
 $routes->get('/', 'HomeController::index');
 
+$routes->get('/pizza/(:num)', 'PizzaController::details/$1');
 $routes->get('/pizzas', 'PizzaController::index');
 $routes->get('/pizza/create', 'PizzaController::create');
 $routes->get('/pizza/delete/(:num)', 'PizzaController::delete/$1');

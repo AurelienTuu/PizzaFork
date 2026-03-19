@@ -22,6 +22,12 @@ class PizzaController extends BaseController {
         return view('Pizza-index.php', $data);
     }
 
+    public function details(int $id) {
+        $data['pizza'] = $this->pizzaModel->getById($id);
+        $data['title'] = "Détails de la pizza";
+        return view('Pizza-detail.php', $data);
+    }
+
     public function create() {
         $data['title'] = 'Nouvelle Pizza';
         return view('Pizza-form.php', $data);
