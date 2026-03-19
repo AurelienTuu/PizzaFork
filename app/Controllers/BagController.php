@@ -38,7 +38,6 @@ class BagController extends BaseController {
             }
 
             $items = $bag->contents();
-            // contents() stores items keyed by rowid
             if (!isset($items[$rowid])) {
                 return redirect()->to('/bag/checkout');
             }
@@ -67,7 +66,6 @@ class BagController extends BaseController {
             $newQty = $currentQty - 1;
 
             if ($newQty <= 0) {
-                // remove the item from the cart
                 $bag->remove($rowid);
             } else {
                 $bag->update([
@@ -76,6 +74,21 @@ class BagController extends BaseController {
                 ]);
             }
 
+            return redirect()->to('/bag/checkout');
+        }
+
+        public function deleteItem(string $rowid = null) {
+            $bag = \Config\Services::cart();
+            if (empty($rowid)) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $items = $bag->contents();
+            if (!isset($items[$rowid])) {
+                return redirect()->to('/bag/checkout');
+            }
+
+            $bag->remove($rowid);
             return redirect()->to('/bag/checkout');
         }
 }
