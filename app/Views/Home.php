@@ -47,12 +47,12 @@
     </p>
 </div>
 
-<h1><?= $title ?></h1>
+<h1 style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; color: white;">LA CARTE</h1>
 
 <div class="row row-cols-md-3">
     <?php foreach ($pizzas as $pizza): ?>
         <div class="col mb-4">
-            <div class="card">
+            <div class="card" style="background-color: #ffffff67; border: 2px solid #ff9900ff;">
                 <img src="<?= '/img/' . $pizza->picture ?>" class="card-img-top fixed-thumb" alt="...">
 
                 <div class="card-body"
