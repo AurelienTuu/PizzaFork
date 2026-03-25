@@ -12,7 +12,8 @@
     "require": {
         "php": "^8.2",
         "codeigniter4/framework": "^4.7",
-        "jason-napolitano/codeigniter4-cart-module": "^1.1"
+        "jason-napolitano/codeigniter4-cart-module": "^1.1",
+        "paypal/rest-api-sdk-php": "^1.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
