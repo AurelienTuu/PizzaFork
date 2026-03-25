@@ -34,7 +34,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-image: url('/img/fond.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
     <?= $this->include('_errorsMessages.php') ?>
     <main class="container">
         <?= $this->renderSection('body') ?>
