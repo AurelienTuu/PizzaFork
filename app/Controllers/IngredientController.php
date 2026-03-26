@@ -29,6 +29,11 @@ class IngredientController extends BaseController
         return view('Ingredient-index.php', $data);
     }
 
+    public function getAll()
+    {
+        return $this->ingredientModel->orderBy('id')->findAll();
+    }
+
     public function create()
     {
         $data['title'] = 'Nouvel Ingredient';

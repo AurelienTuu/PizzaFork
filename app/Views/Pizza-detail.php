@@ -21,6 +21,33 @@
         background-color: #007bff;
         color: white;
     }
+
+    .supplement-badge {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #6c757d;
+        user-select: none;
+    }
+
+    .supplement-badge.selected {
+        background-color: #28a745 !important;
+        border-color: #1e7e34 !important;
+        transform: scale(1.05);
+        color: white !important;
+    }
+
+    .price-tag {
+        font-size: 0.7rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 5px;
+        border-radius: 4px;
+        margin-left: 5px;
+        display: none;
+    }
+
+    .selected .price-tag {
+        display: inline-block;
+    }
 </style>
 
 <div class="card shadow w-100"
@@ -118,9 +145,53 @@
             </div>
         </div>
     </div>
-    <div class="card-footer text-muted text-center py-3">
-        Suppléments
+    <div class="card-footer text-muted py-3">
+        <h2 class="text-center mb-4" style="font-size: 1.2rem; font-family: Impact, sans-serif">Suppléments</h2>
+
+        <div class="row">
+    <?php foreach ($ingredients as $ingredient): ?>
+        <?php 
+            $idsExclus = [1, 2, 23]; 
+            
+            if (in_array($ingredient->id, $idsExclus)) {
+                continue;
+            }
+        ?>
+        <div class="col-md-4 mb-2">
+            <div class="supplement-badge badge badge-secondary w-100 p-2 shadow-sm d-flex justify-content-between align-items-center" 
+                 onclick="toggleSupplement(this)" style="cursor: pointer;">
+                
+                <span>+ <?= esc($ingredient->text) ?></span>
+                <span class="price-tag" style="font-size: 0.8rem; opacity: 0.9;">+1,00 €</span>
+                
+                <input type="checkbox" name="extras[]" value="<?= $ingredient->id ?>" style="display:none;">
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
     </div>
 </div>
 
+<script>
+    function toggleSupplement(element) {
+        element.classList.toggle('selected');
+
+        const checkbox = element.querySelector('input[type="checkbox"]');
+
+        checkbox.checked = !checkbox.checked;
+
+        updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+        let basePrice = 12.50;
+        let extrasCount = document.querySelectorAll('.supplement-badge.selected').length;
+        let newTotal = basePrice + extrasCount;
+
+        const display = document.querySelector('.price-display span');
+        if (display) {
+            display.innerText = newTotal.toFixed(2).replace('.', ',') + " €";
+        }
+    }
+</script>
 <?= $this->endSection() ?>

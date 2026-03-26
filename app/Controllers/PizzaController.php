@@ -5,14 +5,18 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\PizzaModel;
 use App\Entities\Pizza;
+use App\Models\IngredientModel;
+
 
 class PizzaController extends BaseController {
     /** @var PizzaModel $pizzaModel */
     protected $pizzaModel;
+    protected $ingredientModel;
 
     public function __construct() {
         $this->helpers = ['form', 'url'];
         $this->pizzaModel = new PizzaModel();
+        $this->ingredientModel = new IngredientModel();
     }
 
     public function index() {
@@ -23,10 +27,13 @@ class PizzaController extends BaseController {
     }
 
     public function details(int $id) {
-        $data['pizza'] = $this->pizzaModel->getById($id);
-        $data['title'] = "Détails de la pizza";
-        return view('Pizza-detail.php', $data);
-    }
+    $data['pizza'] = $this->pizzaModel->getById($id);
+    $data['ingredients'] = $this->ingredientModel->findAll(); 
+    
+    $data['title'] = "Détails de la pizza";
+    
+    return view('Pizza-detail.php', $data);
+}
 
     public function create() {
         $data['title'] = 'Nouvelle Pizza';
