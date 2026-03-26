@@ -38,7 +38,11 @@
     }
 </style>
 
-<div class="row" style="margin-top: 5%; display: flex; justify-content: flex-end;">
+<div class="tittle" style="margin-top: 2%;">
+    <h1 style="font-family: 'Playfair Display'; font-weight: 700; font-style: italic; color: white; text-align: center;  ">PIZZA FORK</h1>
+</div>
+
+<div class="row" style="display: flex; justify-content: flex-end;">
     <p>
         <a class="btn btn-primary" href="/bag/checkout">
             <i class="fas fa-shopping-cart"></i>
@@ -52,7 +56,7 @@
 <div class="row row-cols-md-3">
     <?php foreach ($pizzas as $pizza): ?>
         <div class="col mb-4">
-            <div class="card" style="background-color: #ffffff67; border: 2px solid #ff9900ff;">
+            <div class="card" style="background-color: #ffffffcc; border: 2px solid #000000ff;">
                 <img src="<?= '/img/' . $pizza->picture ?>" class="card-img-top fixed-thumb" alt="...">
 
                 <div class="card-body"

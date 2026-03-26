@@ -48,23 +48,23 @@
     .selected .price-tag {
         display: inline-block;
     }
+    
+    .cursor-pointer { cursor: pointer; }
 </style>
 
-<div class="card shadow w-100"
-    style="margin-top: 2%; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.95);">
+<div class="card shadow w-100" style="margin-top: 2%; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.95);">
     <div class="card-header bg-primary text-white text-center py-3">
-        <h2 class="h3 mb-0"><?= $pizza->text ?></h2>
+        <h2 class="h3 mb-0" style="font-family: 'Arial Black', sans-serif;"><?= $pizza->text ?></h2>
     </div>
 
-    <div class="card-body"
-        style="display: flex; flex-direction: row; gap: 40px; padding: 40px; align-items: flex-start;">
+    <div class="card-body" style="display: flex; flex-direction: row; gap: 40px; padding: 40px; align-items: flex-start;">
 
         <div style="flex: 0 0 30%;">
             <img src="<?= '/img/' . $pizza->picture ?>" class="img-fluid rounded shadow-sm"
                 style="width: 100%; height:550px; object-fit: cover;" alt="<?= $pizza->text ?>">
         </div>
 
-        <div style="flex: 1; 35%;">
+        <div style="flex: 1;">
             <h3 class="h4 border-bottom pb-2 mb-3">Ingrédients</h3>
             <table class="table">
                 <thead class="thead-light">
@@ -84,27 +84,24 @@
             </table>
         </div>
 
-        <div
-            style="flex: 0 0 30%; display: flex; flex-direction: column; gap: 30px; background: #f8f9fa; padding: 20px; border-radius: 10px; height: 550px;">
+        <div style="flex: 0 0 30%; display: flex; flex-direction: column; gap: 30px; background: #f8f9fa; padding: 20px; border-radius: 10px; min-height: 550px;">
 
             <div class="pizzaSize">
-                <label class="h5 border-bottom pb-2 mb-3 d-block font-weight-bold">Taille de la pizza</label>
+                <label class="h5 border-bottom pb-2 mb-3 d-block font-weight-bold text-center">Taille de la pizza</label>
                 <div class="d-flex justify-content-between text-center align-items-end">
                     <?php
                     $sizes = [
-                        ['id' => 'Small', 'label' => 'Petite', 'cm' => '24', 'img' => 'smallSizePizza.png', 'size' => '60px', 'checked' => ''],
-                        ['id' => 'Medium', 'label' => 'Moyenne', 'cm' => '30', 'img' => 'mediumSizePizza.png', 'size' => '80px', 'checked' => 'checked'],
-                        ['id' => 'Large', 'label' => 'Large', 'cm' => '40', 'img' => 'largeSizePizza.png', 'size' => '100px', 'checked' => '']
+                        ['id' => 'Small', 'label' => 'Petite', 'cm' => '24', 'img' => 'smallSizePizza.png', 'size' => '60px', 'checked' => '', 'price' => 10.00],
+                        ['id' => 'Medium', 'label' => 'Moyenne', 'cm' => '30', 'img' => 'mediumSizePizza.png', 'size' => '80px', 'checked' => 'checked', 'price' => 12.50],
+                        ['id' => 'Large', 'label' => 'Large', 'cm' => '40', 'img' => 'largeSizePizza.png', 'size' => '100px', 'checked' => '', 'price' => 15.00]
                     ];
-                    foreach ($sizes as $s):
-                        ?>
+                    foreach ($sizes as $s): ?>
                         <div class="size-option" style="flex: 1;">
-                            <input type="radio" name="size" id="size<?= $s['id'] ?>" class="btn-check" <?= $s['checked'] ?>>
+                            <input type="radio" name="size" id="size<?= $s['id'] ?>" class="btn-check" 
+                                   <?= $s['checked'] ?> data-price="<?= $s['price'] ?>" onchange="updateTotalPrice()">
                             <label for="size<?= $s['id'] ?>" class="m-0 cursor-pointer">
                                 <div style="height: 110px; display: flex; align-items: center; justify-content: center;">
-                                    <img src="/img/<?= $s['img'] ?>"
-                                        style="width: <?= $s['size'] ?>; transition: transform 0.3s; mix-blend-mode: multiply;"
-                                        class="mb-2 d-block mx-auto img-fluid">
+                                    <img src="/img/<?= $s['img'] ?>" style="width: <?= $s['size'] ?>; transition: transform 0.3s; mix-blend-mode: multiply;" class="mb-2 d-block mx-auto img-fluid">
                                 </div>
                                 <small class="d-block text-muted font-weight-bold"><?= $s['cm'] ?>cm</small>
                                 <div class="btn btn-outline-primary btn-sm mt-1 px-3"><?= $s['label'] ?></div>
@@ -116,26 +113,18 @@
 
             <div class="quantity">
                 <label class="h5 border-bottom pb-2 mb-3 d-block font-weight-bold text-center">Quantité</label>
-
-                <div class="d-flex justify-content-center align-items-center gap-2" style="gap: 10px;">
-
-                    <button class="btn btn-danger d-flex align-items-center justify-content-center p-0" type="button"
-                        onclick="this.nextElementSibling.stepDown()"
-                        style="width: 40px; height: 40px; border-radius: 5px;">-</button>
-
-                    <input type="number" class="form-control text-center font-weight-bold p-0" value="1" min="1"
-                        max="10" readonly
-                        style="width: 40px; height: 40px; flex: none; border-radius: 5px; background-color: #eee;">
-
-                    <button class="btn btn-success d-flex align-items-center justify-content-center p-0" type="button"
-                        onclick="this.previousElementSibling.stepUp()"
-                        style="width: 40px; height: 40px; border-radius: 5px;">+</button>
-
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                    <button class="btn btn-danger" type="button" onclick="changeQty(-1)" style="width: 40px; height: 40px;">-</button>
+                    
+                    <input type="number" id="pizza-qty" class="form-control text-center font-weight-bold" 
+                           value="1" min="1" max="10" readonly style="width: 60px; height: 40px; background-color: #eee;">
+                    
+                    <button class="btn btn-success" type="button" onclick="changeQty(1)" style="width: 40px; height: 40px;">+</button>
                 </div>
             </div>
 
             <div class="price-display text-center mt-2">
-                <span class="h3 font-weight-bold text-primary">12,50 €</span>
+                <span class="h2 font-weight-bold text-primary" id="final-price-display">12,50 €</span>
             </div>
 
             <div class="d-grid mt-2">
@@ -145,53 +134,65 @@
             </div>
         </div>
     </div>
-    <div class="card-footer text-muted py-3">
-        <h2 class="text-center mb-4" style="font-size: 1.2rem; font-family: Impact, sans-serif">Suppléments</h2>
 
-        <div class="row">
-    <?php foreach ($ingredients as $ingredient): ?>
-        <?php 
-            $idsExclus = [1, 2, 23]; 
-            
-            if (in_array($ingredient->id, $idsExclus)) {
-                continue;
-            }
-        ?>
-        <div class="col-md-4 mb-2">
-            <div class="supplement-badge badge badge-secondary w-100 p-2 shadow-sm d-flex justify-content-between align-items-center" 
-                 onclick="toggleSupplement(this)" style="cursor: pointer;">
-                
-                <span>+ <?= esc($ingredient->text) ?></span>
-                <span class="price-tag" style="font-size: 0.8rem; opacity: 0.9;">+1,00 €</span>
-                
-                <input type="checkbox" name="extras[]" value="<?= $ingredient->id ?>" style="display:none;">
-            </div>
+    <div class="card-footer text-muted py-3">
+        <h2 class="text-center mb-4" style="font-size: 1.2rem; font-family: Impact, sans-serif">Suppléments (+1€)</h2>
+        <div class="row px-4">
+            <?php foreach ($ingredients as $ingredient): ?>
+                <?php 
+                    $idsExclus = [1, 2, 23]; 
+                    if (in_array($ingredient->id, $idsExclus)) continue;
+                ?>
+                <div class="col-md-4 mb-2">
+                    <div class="supplement-badge badge badge-secondary w-100 p-2 shadow-sm d-flex justify-content-between align-items-center" 
+                         onclick="toggleSupplement(this)">
+                        <span>+ <?= esc($ingredient->text) ?></span>
+                        <span class="price-tag">+1,00 €</span>
+                        <input type="checkbox" name="extras[]" value="<?= $ingredient->id ?>" style="display:none;">
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
-</div>
     </div>
 </div>
 
 <script>
     function toggleSupplement(element) {
         element.classList.toggle('selected');
-
         const checkbox = element.querySelector('input[type="checkbox"]');
-
         checkbox.checked = !checkbox.checked;
-
         updateTotalPrice();
     }
 
-    function updateTotalPrice() {
-        let basePrice = 12.50;
-        let extrasCount = document.querySelectorAll('.supplement-badge.selected').length;
-        let newTotal = basePrice + extrasCount;
-
-        const display = document.querySelector('.price-display span');
-        if (display) {
-            display.innerText = newTotal.toFixed(2).replace('.', ',') + " €";
+    function changeQty(delta) {
+        const qtyInput = document.getElementById('pizza-qty');
+        let currentVal = parseInt(qtyInput.value);
+        let newVal = currentVal + delta;
+        
+        if (newVal >= 1 && newVal <= 10) {
+            qtyInput.value = newVal;
+            updateTotalPrice();
         }
     }
+
+    function updateTotalPrice() {
+        const selectedSize = document.querySelector('input[name="size"]:checked');
+        let sizePrice = selectedSize ? parseFloat(selectedSize.getAttribute('data-price')) : 12.50;
+
+        let extrasCount = document.querySelectorAll('.supplement-badge.selected').length;
+        
+        const qtyInput = document.getElementById('pizza-qty');
+        let quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+
+        let total = (sizePrice + extrasCount) * quantity;
+
+        const display = document.getElementById('final-price-display');
+        if (display) {
+            display.innerText = total.toFixed(2).replace('.', ',') + " €";
+        }
+    }
+
+    window.onload = updateTotalPrice;
 </script>
+
 <?= $this->endSection() ?>
