@@ -39,7 +39,9 @@
 </style>
 
 <div class="tittle" style="margin-top: 2%;">
-    <h1 style="font-family: 'Playfair Display'; font-weight: 700; font-style: italic; color: white; text-align: center;  ">PIZZA FORK</h1>
+    <h1
+        style="font-family: 'Playfair Display'; font-weight: 700; font-style: italic; color: white; text-align: center;  ">
+        PIZZA FORK</h1>
 </div>
 
 <div class="row" style="display: flex; justify-content: flex-end;">
@@ -85,7 +87,8 @@
                     <a href="<?= '/pizza/' . $pizza->id ?>" class="btn btn-secondary" role="button">
                         Détails Pizza <i class="fas fa-info-circle"></i>
                     </a>
-                    <a href="<?= '/bag/add/' . $pizza->id ?>" class="btn btn-primary" role="button">
+                    <a href="<?= '/bag/add/' . $pizza->id ?>" class="btn btn-primary add-to-cart-home"
+                        data-pizza-id="<?= $pizza->id ?>" role="button">
                         Ajoutez au panier <i class="fas fa-cart-plus"></i>
                     </a>
                 </div>
@@ -97,4 +100,56 @@
 <div class="row">
     <?= $pager->links('default', 'bootstrap') ?>
 </div>
+
+<script>
+document.querySelectorAll('.add-to-cart-home').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault(); 
+
+        const pizzaId = this.getAttribute('data-pizza-id');
+        const url = this.getAttribute('href');
+        
+        // 1. Trouver l'input radio coché pour cette pizza spécifique
+        const selectedInput = document.querySelector(`input[name="size_${pizzaId}"]:checked`);
+        let sizeValue = "Moyenne"; // Valeur par défaut
+        
+        if (selectedInput) {
+            // On récupère le texte du label correspondant (Petite, Moyenne ou Large)
+            const label = document.querySelector(`label[for="${selectedInput.id}"]`);
+            sizeValue = label.textContent.trim();
+        }
+
+        // 2. Création d'un formulaire invisible pour envoyer en POST
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        // 3. Ajout du jeton CSRF (Indispensable pour CodeIgniter)
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '<?= csrf_token() ?>';
+        csrfInput.value = '<?= csrf_hash() ?>';
+        form.appendChild(csrfInput);
+
+        // 4. Ajout de la taille
+        const sizeInput = document.createElement('input');
+        sizeInput.type = 'hidden';
+        sizeInput.name = 'size';
+        sizeInput.value = sizeValue;
+        form.appendChild(sizeInput);
+
+        // 5. Ajout de la quantité (forcée à 1 sur la home)
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'hidden';
+        qtyInput.name = 'qty';
+        qtyInput.value = '1';
+        form.appendChild(qtyInput);
+
+        // 6. Envoi automatique
+        document.body.appendChild(form);
+        form.submit();
+    });
+});
+</script>
+
 <?= $this->endSection() ?>

@@ -5,172 +5,113 @@
     <i class="fas fa-arrow-left"></i> Retour à la boutique
 </a>
 
-<div class="card" style="margin-top: 5%;">
-
-
-    <div class="card-header">
-        <div class="col">
-            <h4><?= $title ?></h4>
-        </div>
+<div class="card shadow" style="margin-top: 2%; border-radius: 15px; overflow: hidden;">
+    <div class="card-header bg-dark text-white">
+        <h4 class="mb-0"><i class="fas fa-shopping-bag mr-2"></i> <?= $title ?></h4>
     </div>
-    <div class="card-body">
-        <thead></thead>
-        <table class="table table-hover table-striped">
-            <?php foreach ($bag->contents() as $item): ?>
-                <tr style="text-align: center;">
-                    <td>
-                        <img src="<?= '/img/' . $item['picture'] ?>" class="img-fluid rounded bag-thumb" alt="...">
-                    </td>
-                    <td>
-                        <h5><?= $item['name'] ?></h5>
-                    </td>
-                    <td style="width: 5%;">
-                        <a href="<?= '/bag/qty/Dec/' . $item['rowid'] ?>" class="btn btn-danger" role="button">
-                            <i class="fas fa-minus"></i>
-                        </a>
-                    </td>
-                    <td style="width: 10%;">
-                        <h5><?= $bag->formatNumber($item['qty']) ?></h5>
-                    </td>
-                    <td style="width: 5%;">
-                        <a href="<?= '/bag/qty/Inc/' . $item['rowid'] ?>" class="btn btn-success" role="button">
-                            <i class="fas fa-plus"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <h5 class="text-grey"><?= '&euro;' .
-                            $bag->formatNumber($item['price']) ?></h5>
-                    </td>
-                    <td>
-                        <a href="<?= '/bag/item/delete/' . $item['rowid'] ?>" class="btn btn-danger" role="button">
-                            <i class="fa fa-trash"></i></a>
-                    </td>
+    
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="thead-light">
+                <tr class="text-center">
+                    <th>Produit</th>
+                    <th class="text-left">Détails</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire</th>
+                    <th>Sous-total</th>
+                    <th>Action</th>
                 </tr>
-            <?php endforeach ?>
+            </thead>
+            <tbody>
+                <?php foreach ($bag->contents() as $item): ?>
+                    <tr class="text-center align-middle">
+                        <td style="width: 150px;">
+                            <img src="<?= '/img/' . $item['picture'] ?>" class="img-fluid rounded shadow-sm" style="max-height: 80px;" alt="...">
+                        </td>
+
+                        <td class="text-left">
+                            <h5 class="mb-1"><?= $item['name'] ?></h5>
+                            <?php if (isset($item['options']['details'])): ?>
+                                <div class="small text-muted">
+                                    <i class="fas fa-info-circle mr-1"></i> <?= $item['options']['details'] ?>
+                                </div>
+                            <?php endif; ?>
+                            <?php if (isset($item['options']['extras_names'])): ?>
+                                <div class="small text-success">
+                                    <i class="fas fa-plus-circle mr-1"></i> Suppléments: <?= $item['options']['extras_names'] ?>
+                                </div>
+                            <?php endif; ?>
+                        </td>
+
+                        <td style="width: 180px;">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <a href="<?= '/bag/qty/Dec/' . $item['rowid'] ?>" class="btn btn-sm btn-outline-danger mr-2">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                <span class="h5 mb-0 mx-2 font-weight-bold"><?= $item['qty'] ?></span>
+                                <a href="<?= '/bag/qty/Inc/' . $item['rowid'] ?>" class="btn btn-sm btn-outline-success ml-2">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="text-muted"><?= number_format($item['price'], 2, ',', ' ') ?> €</span>
+                        </td>
+
+                        <td>
+                            <strong class="text-primary h5"><?= number_format($item['subtotal'], 2, ',', ' ') ?> €</strong>
+                        </td>
+
+                        <td>
+                            <a href="<?= '/bag/item/delete/' . $item['rowid'] ?>" class="btn btn-link text-danger" title="Supprimer">
+                                <i class="fa fa-trash-alt fa-lg"></i>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
-    <div class="card-footer">
-        <div id="paypal-button-container"></div>
-        <p id="result-message"></p>
 
-
-        <!-- Initialize the JS-SDK -->
-        <script
-            src="https://www.paypal.com/sdk/js?client-id=AQoTtpmnvGIFW7iWp1IrX6PFzTCt52f4zALSu8BhqnQ3mp_NFWoTbyjeHzlQq_DFrCPCZ0I9O3vIP8NK&buyer-country=FR&currency=EUR&components=buttons&enable-funding=venmo,card&disable-funding=paylater"
-            data-sdk-integration-source="developer-studio"></script>
-        <script>
-            const paypalButtons = window.paypal.Buttons({
-                style: {
-                    shape: "pill",
-                    layout: "vertical",
-                    color: "gold",
-                    label: "checkout",
-                },
-
-                async createOrder() {
-                    try {
-                        const response = await fetch("/api/orders", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            // use the "body" param to optionally pass additional order information
-                            // like product ids and quantities
-                            body: JSON.stringify({
-                                cart: [
-                                    {
-                                        id: "YOUR_PRODUCT_ID",
-                                        quantity: "YOUR_PRODUCT_QUANTITY",
-                                    },
-                                ],
-                            }),
-                        });
-
-                        const orderData = await response.json();
-
-                        if (orderData.id) {
-                            return orderData.id;
-                        }
-                        const errorDetail = orderData?.details?.[0];
-                        const errorMessage = errorDetail
-                            ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-                            : JSON.stringify(orderData);
-
-                        throw new Error(errorMessage);
-                    } catch (error) {
-                        console.error(error);
-                        // resultMessage(`Could not initiate PayPal Checkout...<br><br>${error}`);
-                    }
-                },
-                async onApprove(data, actions) {
-                    try {
-                        const response = await fetch(
-                            `/api/orders/${data.orderID}/capture`,
-                            {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                            }
-                        );
-
-                        const orderData = await response.json();
-                        // Three cases to handle:
-                        //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                        //   (2) Other non-recoverable errors -> Show a failure message
-                        //   (3) Successful transaction -> Show confirmation or thank you message
-
-                        const errorDetail = orderData?.details?.[0];
-
-                        if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                            // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                            // recoverable state, per
-                            // https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                            return actions.restart();
-                        } else if (errorDetail) {
-                            // (2) Other non-recoverable errors -> Show a failure message
-                            throw new Error(
-                                `${errorDetail.description} (${orderData.debug_id})`
-                            );
-                        } else if (!orderData.purchase_units) {
-                            throw new Error(JSON.stringify(orderData));
-                        } else {
-                            // (3) Successful transaction -> Show confirmation or thank you message
-                            // Or go to another URL:  actions.redirect('thank_you.html');
-                            const transaction =
-                                orderData?.purchase_units?.[0]?.payments?.captures?.[0] ||
-                                orderData?.purchase_units?.[0]?.payments
-                                    ?.authorizations?.[0];
-                            resultMessage(
-                                `Transaction ${transaction.status}: ${transaction.id}<br>
-          <br>See console for all available details`
-                            );
-                            console.log(
-                                "Capture result",
-                                orderData,
-                                JSON.stringify(orderData, null, 2)
-                            );
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        resultMessage(
-                            `Sorry, your transaction could not be processed...<br><br>${error}`
-                        );
-                    }
-                },
-
-
-            });
-            paypalButtons.render("#paypal-button-container");
-
-
-            // Example function to show a result to the user. Your site's UI library can be used instead.
-            function resultMessage(message) {
-                const container = document.querySelector("#result-message");
-                container.innerHTML = message;
-            }
-        </script>
+    <div class="card-footer bg-light p-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="mb-0">Total: <span class="text-primary"><?= number_format($bag->total(), 2, ',', ' ') ?> €</span></h3>
+            </div>
+            <div class="col-md-6 text-right">
+                <div id="paypal-button-container" style="max-width: 300px; margin-left: auto;"></div>
+            </div>
+        </div>
+        <p id="result-message" class="mt-3 text-center font-weight-bold"></p>
     </div>
-
 </div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AQoTtpmnvGIFW7iWp1IrX6PFzTCt52f4zALSu8BhqnQ3mp_NFWoTbyjeHzlQq_DFrCPCZ0I9O3vIP8NK&currency=EUR"></script>
+
+<script>
+    paypal.Buttons({
+        style: { shape: "pill", layout: "vertical", color: "gold", label: "checkout" },
+        async createOrder() {
+            const response = await fetch("/api/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    total: "<?= $bag->total() ?>", // On envoie le vrai total du panier
+                    items: <?= json_encode($bag->contents()) ?> 
+                })
+            });
+            const orderData = await response.json();
+            return orderData.id;
+        },
+        async onApprove(data, actions) {
+            const response = await fetch(`/api/orders/${data.orderID}/capture`, { method: "POST" });
+            const orderData = await response.json();
+            if (orderData.status === 'COMPLETED') {
+                window.location.href = "/order/success"; // Rediriger après succès
+            }
+        }
+    }).render("#paypal-button-container");
+</script>
+
 <?= $this->endSection() ?>

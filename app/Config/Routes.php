@@ -30,7 +30,7 @@ $routes->post('/pizza/ingredient/save', 'GarnitureController::save');
 $routes->get('/pizza/ingredient/edit/(:num)', 'GarnitureController::edit/$1');
 $routes->post('/pizza/ingredient/save/(:num)', 'GarnitureController::save/$1');
 //
-$routes->get('/bag/add/(:num)', 'BagController::add/$1');
+$routes->post('/bag/add/(:num)', 'BagController::add/$1');
 $routes->get('/bag/checkout', 'BagController::index');
 $routes->get('/bag/qty/Inc/(:any)', 'BagController::incQty/$1');
 $routes->get('/bag/qty/Dec/(:any)', 'BagController::decQty/$1');
