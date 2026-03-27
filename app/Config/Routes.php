@@ -35,4 +35,9 @@ $routes->get('/bag/checkout', 'BagController::index');
 $routes->get('/bag/qty/Inc/(:any)', 'BagController::incQty/$1');
 $routes->get('/bag/qty/Dec/(:any)', 'BagController::decQty/$1');
 $routes->get('/bag/item/delete/(:any)', 'BagController::deleteItem/$1');
+// Routes pour l'API PayPal
+$routes->post('api/orders', 'ApiController::createOrder');
+$routes->post('api/orders/(:segment)/capture', 'ApiController::captureOrder/$1');
+// Route pour la page de succès
+$routes->get('order/success', 'Home::success'); // Crée une vue simple de remerciement
 
