@@ -44,7 +44,11 @@
         PIZZA FORK</h1>
 </div>
 
-<div class="row" style="display: flex; justify-content: flex-end;">
+<div class="row" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 10px;">
+    <p>
+        <a class="btn btn-light" href="/login">Se connecter</a>
+        <a href="/register" class="btn btn-primary">S'inscrire</a>
+    </p>
     <p>
         <a class="btn btn-primary" href="/bag/checkout">
             <i class="fas fa-shopping-cart"></i>
@@ -102,54 +106,54 @@
 </div>
 
 <script>
-document.querySelectorAll('.add-to-cart-home').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault(); 
+    document.querySelectorAll('.add-to-cart-home').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
 
-        const pizzaId = this.getAttribute('data-pizza-id');
-        const url = this.getAttribute('href');
-        
-        // 1. Trouver l'input radio coché pour cette pizza spécifique
-        const selectedInput = document.querySelector(`input[name="size_${pizzaId}"]:checked`);
-        let sizeValue = "Moyenne"; // Valeur par défaut
-        
-        if (selectedInput) {
-            // On récupère le texte du label correspondant (Petite, Moyenne ou Large)
-            const label = document.querySelector(`label[for="${selectedInput.id}"]`);
-            sizeValue = label.textContent.trim();
-        }
+            const pizzaId = this.getAttribute('data-pizza-id');
+            const url = this.getAttribute('href');
 
-        // 2. Création d'un formulaire invisible pour envoyer en POST
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = url;
+            // 1. Trouver l'input radio coché pour cette pizza spécifique
+            const selectedInput = document.querySelector(`input[name="size_${pizzaId}"]:checked`);
+            let sizeValue = "Moyenne"; // Valeur par défaut
 
-        // 3. Ajout du jeton CSRF (Indispensable pour CodeIgniter)
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '<?= csrf_token() ?>';
-        csrfInput.value = '<?= csrf_hash() ?>';
-        form.appendChild(csrfInput);
+            if (selectedInput) {
+                // On récupère le texte du label correspondant (Petite, Moyenne ou Large)
+                const label = document.querySelector(`label[for="${selectedInput.id}"]`);
+                sizeValue = label.textContent.trim();
+            }
 
-        // 4. Ajout de la taille
-        const sizeInput = document.createElement('input');
-        sizeInput.type = 'hidden';
-        sizeInput.name = 'size';
-        sizeInput.value = sizeValue;
-        form.appendChild(sizeInput);
+            // 2. Création d'un formulaire invisible pour envoyer en POST
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
 
-        // 5. Ajout de la quantité (forcée à 1 sur la home)
-        const qtyInput = document.createElement('input');
-        qtyInput.type = 'hidden';
-        qtyInput.name = 'qty';
-        qtyInput.value = '1';
-        form.appendChild(qtyInput);
+            // 3. Ajout du jeton CSRF (Indispensable pour CodeIgniter)
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '<?= csrf_token() ?>';
+            csrfInput.value = '<?= csrf_hash() ?>';
+            form.appendChild(csrfInput);
 
-        // 6. Envoi automatique
-        document.body.appendChild(form);
-        form.submit();
+            // 4. Ajout de la taille
+            const sizeInput = document.createElement('input');
+            sizeInput.type = 'hidden';
+            sizeInput.name = 'size';
+            sizeInput.value = sizeValue;
+            form.appendChild(sizeInput);
+
+            // 5. Ajout de la quantité (forcée à 1 sur la home)
+            const qtyInput = document.createElement('input');
+            qtyInput.type = 'hidden';
+            qtyInput.name = 'qty';
+            qtyInput.value = '1';
+            form.appendChild(qtyInput);
+
+            // 6. Envoi automatique
+            document.body.appendChild(form);
+            form.submit();
+        });
     });
-});
 </script>
 
 <?= $this->endSection() ?>
