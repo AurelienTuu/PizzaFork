@@ -53,7 +53,7 @@ class IngredientController extends BaseController
         return redirect()->to('/ingredients')->with('message', 'Ingrédient supprimé avec succès.');
     }
 
-    public function save(int $id = null)
+    public function save(?int $id = null)
     {
         $rules = $this->ingredientModel->getValidationRules();
 

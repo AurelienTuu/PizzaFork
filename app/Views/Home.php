@@ -44,7 +44,7 @@
         PIZZA FORK</h1>
 </div>
 
-<div class="row" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 10px;">
+<div class="row" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 15px;">
     <p>
         <a class="btn btn-light" href="/login">Se connecter</a>
         <a href="/register" class="btn btn-primary">S'inscrire</a>

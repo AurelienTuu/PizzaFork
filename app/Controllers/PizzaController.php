@@ -45,7 +45,7 @@ class PizzaController extends BaseController {
         return redirect()->to('/pizzas')->with('message', 'Pizza supprimée');
     }
 
-    public function save(int $id = null) {
+    public function save(?int $id = null) {
         $rules = $this->pizzaModel->getValidationRules();
         $file = $this->request->getFile('picture');
         $isNewUpload = $file && $file->getError() !== UPLOAD_ERR_NO_FILE;

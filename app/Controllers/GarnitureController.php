@@ -57,7 +57,7 @@ class GarnitureController extends BaseController
     }
 
 
-    public function save(int $id = null)
+    public function save(?int $id = null)
     {
         $rules = $this->garnitureModel->getValidationRules();
         if (!$this->validate($rules)) {

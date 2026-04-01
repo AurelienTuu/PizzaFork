@@ -79,7 +79,7 @@ class BagController extends BaseController
         return redirect()->to('/')->with('message', 'Pizza ajoutée au panier !');
     }
 
-    public function incQty(string $rowid = null)
+    public function incQty(?string $rowid = null)
     {
         if (empty($rowid)) return redirect()->to('/bag/checkout');
 
@@ -94,7 +94,7 @@ class BagController extends BaseController
         return redirect()->to('/bag/checkout');
     }
 
-    public function decQty(string $rowid = null)
+    public function decQty(?string $rowid = null)
     {
         if (empty($rowid)) return redirect()->to('/bag/checkout');
 
@@ -116,7 +116,7 @@ class BagController extends BaseController
         return redirect()->to('/bag/checkout');
     }
 
-    public function deleteItem(string $rowid = null)
+    public function deleteItem(?string $rowid = null)
     {
         if (empty($rowid)) return redirect()->to('/bag/checkout');
         
