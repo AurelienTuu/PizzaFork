@@ -44,10 +44,15 @@
         PIZZA FORK</h1>
 </div>
 
-<div class="row" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 15px;">
+<div class="row"
+    style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; gap: 15px;">
     <p>
-        <a class="btn btn-light" href="/login">Se connecter</a>
-        <a href="/register" class="btn btn-primary">S'inscrire</a>
+        <?php if (auth()->loggedIn()): ?>
+            <a href="/logout" class="btn btn-danger">Se déconnecter</a>
+        <?php else: ?>
+            <a class="btn btn-light" href="/login">Se connecter</a>
+            <a href="/register" class="btn btn-primary">S'inscrire</a>
+        <?php endif; ?>
     </p>
     <p>
         <a class="btn btn-primary" href="/bag/checkout">

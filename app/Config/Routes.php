@@ -40,6 +40,5 @@ $routes->post('api/orders', 'ApiController::createOrder');
 $routes->post('api/orders/(:segment)/capture', 'ApiController::captureOrder/$1');
 
 service('auth')->routes($routes);
-// Route pour la page de succès
-$routes->get('order/success', 'Home::success'); // Crée une vue simple de remerciement
 
+$routes->get('/adminDashboard', 'AdminController::index');
