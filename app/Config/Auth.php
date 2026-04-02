@@ -77,7 +77,7 @@ class Auth extends ShieldAuth
         'register'          => '/',
         'login'             => '/',
         'logout'            => '/',
-        'admin'             => '/adminDashboard',
+        'admin'             => 'admin/Dashboard',
         'force_reset'       => '/',
         'permission_denied' => '/',
         'group_denied'      => '/',
