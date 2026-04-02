@@ -6,55 +6,66 @@ use CodeIgniter\RESTful\ResourceController;
 
 class ApiController extends ResourceController
 {
-    // Tes identifiants Sandbox
-    private $clientId = "AZgdcCREt-e92TI2hQW1h0FZAjGRqQm8fD685aRsxvCguxwfI3gyQXcy8o9vw-I7rHl1HjMpdv9hb4lC";
-    private $clientSecret = "EP2e14sed5-nf4M3gxNoh3Cek8q85EHqlQ3uuBAnNAqb0ezLNjbwoXJvZGAw4iWRZeyXtr_ZjjPrsRrZ";
-    
-    // URL de l'API Sandbox de PayPal
-    private $baseUrl = "https://api-m.sandbox.paypal.com";
+    private $clientId;
+    private $clientSecret;
+    private $baseUrl;
+
+    public function __construct()
+    {
+        // On récupère les infos depuis le fichier .env via les variables d'environnement
+        $this->clientId     = env('PAYPAL_CLIENT_ID');
+        $this->clientSecret = env('PAYPAL_SECRET');
+        
+        // Définition de l'URL selon le mode
+        $mode = env('PAYPAL_MODE', 'sandbox');
+        $this->baseUrl = ($mode === 'sandbox') 
+            ? "https://api-m.sandbox.paypal.com" 
+            : "https://api-m.paypal.com";
+    }
 
     /**
-     * Étape 1 : Obtenir le jeton d'accès (Access Token) auprès de PayPal
+     * Étape 1 : Obtenir le jeton d'accès (Access Token)
      */
     private function getAccessToken()
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->baseUrl . "/v1/oauth2/token");
-        curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // À mettre à true en production
+        
+        // Sécurité : On active la vérification SSL (important même en sandbox)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true); 
+        
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_USERPWD, $this->clientId . ":" . $this->clientSecret);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials");
 
         $result = curl_exec($ch);
-        
-        if(curl_errno($ch)) {
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($status !== 200) {
             return null;
         }
 
         $json = json_decode($result);
-        curl_close($ch);
-
         return $json->access_token ?? null;
     }
 
     /**
-     * Étape 2 : Créer la commande réelle sur les serveurs PayPal
+     * Étape 2 : Créer la commande réelle
      */
     public function createOrder()
     {
         $bag = \Config\Services::cart();
         $total = $bag->total();
 
-        // Sécurité : Ne pas créer de commande si le panier est vide
         if ($total <= 0) {
-            return $this->fail("Le panier est vide", 400);
+            return $this->fail("Le panier est vide ou invalide.", 400);
         }
 
         $accessToken = $this->getAccessToken();
         if (!$accessToken) {
-            return $this->fail("Impossible d'obtenir le jeton PayPal", 500);
+            return $this->fail("Erreur d'authentification PayPal. Vérifiez vos identifiants.", 500);
         }
 
         $orderData = [
@@ -70,7 +81,7 @@ class ApiController extends ResourceController
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->baseUrl . "/v2/checkout/orders");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
             "Authorization: Bearer " . $accessToken
@@ -86,19 +97,23 @@ class ApiController extends ResourceController
     }
 
     /**
-     * Étape 3 : Capturer le paiement après validation de l'utilisateur
+     * Étape 3 : Capturer le paiement
      */
-    public function captureOrder($orderID)
+    public function captureOrder($orderID = null)
     {
+        if (!$orderID) {
+            return $this->fail("ID de commande manquant.", 400);
+        }
+
         $accessToken = $this->getAccessToken();
         if (!$accessToken) {
-            return $this->fail("Erreur d'authentification PayPal", 500);
+            return $this->fail("Erreur d'authentification PayPal.", 500);
         }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->baseUrl . "/v2/checkout/orders/" . $orderID . "/capture");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Content-Type: application/json",
             "Authorization: Bearer " . $accessToken
@@ -107,17 +122,30 @@ class ApiController extends ResourceController
 
         $result = curl_exec($ch);
         $json = json_decode($result);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        // Si le paiement est réussi
-        if (isset($json->status) && $json->status === 'COMPLETED') {
-            // 1. Ici tu peux appeler un modèle pour sauvegarder la commande en BDD
+        // Analyse de la réponse
+        if ($status === 201 && isset($json->status) && $json->status === 'COMPLETED') {
+            
+            // --- LOGIQUE MÉTIER ICI ---
+            // 1. Enregistrer en BDD (ex: $orderModel->saveOrder($json))
             
             // 2. Vider le panier
             $bag = \Config\Services::cart();
             $bag->destroy();
+
+            return $this->respond([
+                'status' => 'success',
+                'message' => 'Paiement validé et panier vidé',
+                'details' => $json
+            ]);
         }
 
-        return $this->respond($json);
+        return $this->respond([
+            'status' => 'error',
+            'message' => 'Le paiement n\'a pas pu être capturé',
+            'details' => $json
+        ], 400);
     }
 }
