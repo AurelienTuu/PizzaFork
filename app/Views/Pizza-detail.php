@@ -111,10 +111,16 @@
                     <span class="h2 font-weight-bold text-primary" id="final-price-display">12,50 €</span>
                 </div>
 
-                <div class="d-grid mt-2">
+                <div class="d-grid mt-2" style="text-align: center;">
+                    <?php if (auth()->loggedIn()): ?>
                     <button type="submit" class="btn btn-success btn-lg btn-block py-3 shadow-sm">
                         <i class="fas fa-cart-plus mr-2"></i> Ajouter au panier
                     </button>
+                    <?php else: ?>
+                        <a href="/login" class="btn btn-outline-secondary">
+                            Connectez-vous pour commander <i class="fas fa-lock"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
