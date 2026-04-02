@@ -35,6 +35,7 @@
     </a>
 </div>
 <form action="<?= '/bag/add/' . $pizza->id ?>" method="POST" id="pizza-form">
+    <?= csrf_field() ?>
     <div class="card shadow w-100" style="margin-top: 2%; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.9);">
         
         <div class="card-header bg-primary text-white text-center py-3">
