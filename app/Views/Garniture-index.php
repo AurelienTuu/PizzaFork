@@ -1,5 +1,8 @@
 <?= $this->extend('page.php') ?>
 <?= $this->section('body') ?>
+<div style="margin-top: 2%;">
+    <a href="/pizzas" class="btn btn-secondary">Retour aux pizzas</a>
+</div>
 <div class="card" style="margin-top: 2%; border-radius: 15px; overflow: hidden;">
     <div class="card-header">
         <h1>
@@ -18,19 +21,19 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($pizza->ingredients as $ingredient): ?>
+                <?php foreach ($pizza->ingredients as $ingredient): ?>
                     <tr>
                         <th scope="row"><?= $ingredient->id ?></th>
                         <td><?= $ingredient->order ?></td>
                         <td><?= $ingredient->ingredient->text ?></td>
                         <td><?= $ingredient->quantity ?></td>
                         <td>
-                            <a href="<?= '/pizza/ingredient/edit/'.$ingredient->id ?>"
-                                class="btn btn-primary" role="button">
+                            <a href="<?= '/pizza/ingredient/edit/' . $ingredient->id ?>" class="btn btn-primary"
+                                role="button">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="<?= '/pizza/ingredient/delete/'.$ingredient->id ?>"
-                                class="btn btn-danger" role="button">
+                            <a href="<?= '/pizza/ingredient/delete/' . $ingredient->id ?>" class="btn btn-danger"
+                                role="button">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
@@ -39,6 +42,6 @@
             </tbody>
         </table>
     </div>
-    <a class="btn btn-primary" href="<?= '/pizza/ingredient/create/'. $pizza->id ?>"><i class="fas fa-plus"></i></a>
+    <a class="btn btn-primary" href="<?= '/pizza/ingredient/create/' . $pizza->id ?>"><i class="fas fa-plus"></i></a>
 </div>
 <?= $this->endSection() ?>

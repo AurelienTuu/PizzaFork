@@ -67,7 +67,7 @@
 <div class="row row-cols-md-3">
     <?php foreach ($pizzas as $pizza): ?>
         <div class="col mb-4">
-            <div class="card" style="background-color: #ffffffcc; border: 2px solid #000000ff;">
+            <div class="card" style="background-color: rgba(255, 255, 255, 0.9); border: 2px solid #000000ff;">
                 <img src="<?= '/img/' . $pizza->picture ?>" class="card-img-top fixed-thumb" alt="...">
 
                 <div class="card-body"

@@ -43,7 +43,7 @@
                             <?php endif; ?>
                         </td>
 
-                        <td style="width: 180px;">
+                        <td style="width: 180px; ">
                             <div class="d-flex justify-content-center align-items-center">
                                 <a href="<?= '/bag/qty/Dec/' . $item['rowid'] ?>" class="btn btn-sm btn-outline-danger mr-2">
                                     <i class="fas fa-minus"></i>

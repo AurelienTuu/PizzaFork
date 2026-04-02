@@ -1,5 +1,8 @@
 <?= $this->extend('page.php') ?>
 <?= $this->section('body') ?>
+<div style="margin-top: 2%;">
+    <a href="/adminDashboard" class="btn btn-secondary">Retour au tableau de bord</a>
+</div>
 <div class="card" style="margin-top: 2%; border-radius: 15px; overflow: hidden;">
     <div class="card-header">
         <h1><?=$title?></h1>

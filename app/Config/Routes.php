@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->setDefaultController('HomeController');
 $routes->get('/', 'HomeController::index');
 
-$routes->get('/pizza/(:num)', 'PizzaController::details/$1', ['filter' => 'group:admin']);
+$routes->get('/pizza/(:num)', 'PizzaController::details/$1');
 $routes->get('/pizzas', 'PizzaController::index', ['filter' => 'group:admin']);
 $routes->get('/pizza/create', 'PizzaController::create', ['filter' => 'group:admin']);
 $routes->get('/pizza/delete/(:num)', 'PizzaController::delete/$1', ['filter' => 'group:admin']);

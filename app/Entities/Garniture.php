@@ -12,7 +12,7 @@ class Garniture extends Entity {
     protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
     protected $casts   = [];
 
-    public function __construct(array $data=null) {
+    public function __construct(?array $data=null) {
         parent::__construct($data);
         $this->ingredient = null;
     }

@@ -29,10 +29,13 @@
     }
     .selected .price-tag { display: inline-block; }
 </style>
-
+<div style="margin-top: 2%;">
+    <a href="/" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Retour à la carte
+    </a>
+</div>
 <form action="<?= '/bag/add/' . $pizza->id ?>" method="POST" id="pizza-form">
-    
-    <div class="card shadow w-100" style="margin-top: 2%; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.95);">
+    <div class="card shadow w-100" style="margin-top: 2%; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,0.9);">
         
         <div class="card-header bg-primary text-white text-center py-3">
             <h2 class="h3 mb-0" style="font-family: 'Arial Black', sans-serif;"><?= $pizza->text ?></h2>
