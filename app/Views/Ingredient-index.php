@@ -1,6 +1,6 @@
 <?= $this->extend('page.php') ?>
 <?= $this->section('body') ?>
-<div class="card">
+<div class="card" style="margin-top: 2%; border-radius: 15px; overflow: hidden;">
     <div class="card-header">
         <h1><?=$title?></h1>
     </div>
