@@ -3,25 +3,30 @@
 namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
-use Faker\Factory;
-use Faker\Generator;
 
-class PizzaSeeder extends Seeder {
-    public function run() {
-        for ($i = 0; $i < 100; $i++) {
-            $this->db->table('pizza')->insert($this->createPizza());
-        }
-    }
-
-    private function createPizza(): array {
-        /**
-         * @var Generator $faker
-         */
-        $faker = Factory::create('it_IT');
-        $city = $faker->city();
-
-        return [
-            'text' => $city, 'picture' => null
+class PizzaSeeder extends Seeder
+{
+    public function run()
+    {
+        $data = [
+            ['text' => 'Chèvre Miel',   'picture' => 'chevreMiel.jpg'],
+            ['text' => 'Fermière',     'picture' => 'fermiere.png'],
+            ['text' => 'Margherita',   'picture' => 'margherita.jpg'],
+            ['text' => 'Orientale',    'picture' => 'orientale.png'],
+            ['text' => 'Regina',       'picture' => 'regina.jpg'],
+            ['text' => 'Hawaïenne',    'picture' => 'hawaienne.jpg'],
+            ['text' => 'Vegetarienne', 'picture' => 'vegetarienne.jpg'],
+            ['text' => '4 Fromages',   'picture' => '4Fromages.jpg'],
+            ['text' => 'Bolognaise',   'picture' => 'bolognaise.jpeg'],
+            ['text' => 'Calzone',      'picture' => 'calzone.jpg'],
+            ['text' => 'Tartiflette',  'picture' => 'tartiflette.jpg'],
+            ['text' => 'Raclette',     'picture' => 'raclette.jpg'],
+            ['text' => 'Mexicaine',    'picture' => 'mexicaine.jpeg'],
+            ['text' => 'Forestière',   'picture' => 'forestiere.jpg'],
+            ['text' => 'Pêcheur',      'picture' => 'pecheur.jpg'],
+            ['text' => 'Norvegienne',  'picture' => 'norvegienne.jpg'],
         ];
+
+        $this->db->table('pizza')->insertBatch($data);
     }
 }
